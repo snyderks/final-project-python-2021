@@ -53,3 +53,14 @@
 ## Transportation
 
 [Transportation for London](https://tfl.gov.uk/info-for/open-data-users/)
+
+---
+
+# Ideas
+
+## Transportation for London
+
+All these ideas could incorporate time shifting
+ - Live-updated map of most underserved and overserved tube lines
+ - Commute times for different origins and destinations in London
+ - Which tube lines are most profitable
