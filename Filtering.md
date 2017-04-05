@@ -1,3 +1,5 @@
+## Submissions
+
 1. Do not include self posts. (Is_Self == true)
 2. Tags we want:
   - Permalink
@@ -16,3 +18,12 @@
   - title
   - id
   - domain
+
+## Subreddit
+
+All data in the this set are posts taken from unique subreddits (one post per subreddit).
+
+Tags we want:
+  - subreddit_id
+  - over_18
+  - subreddit
