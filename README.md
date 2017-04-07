@@ -1,7 +1,7 @@
 # X-Post and Repost Analysis of reddit.com
 
 ## Members
-Noah Bass (bassnh), Kristian Snyder (snyderks)
+Noah Bass (noahbass), Kristian Snyder (snyderks)
 
 ## Goals
 
