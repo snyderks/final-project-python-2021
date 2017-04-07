@@ -1,12 +1,18 @@
-Requirements:
- - identifies your team members,
- - identify one or more standard or 3rd party libraries that you will investigate along with a website reference that describes the libraries,
- - and finally a short description about the goals of your proposed application.
-
 # X-Post and Repost Analysis of reddit.com
 
 ## Members
 Noah Bass (bassnh), Kristian Snyder (snyderks)
+
+## Goals
+
+Using available reddit data, the application will:
+ - Analyze a set of Reddit submissions, such as all posts in a specific month.
+ - Then determine which submissions were reposted or x-posted. X-posting is a specific form of reposting wherein the original subreddit is explicitly stated, usually in the title.
+ - Analyze the submissions and group them by what link they point to, then comparing:
+     - The relative popularity of the posts, based on vote count. This raw count will be weighted by subscriber count, to avoid giving prevalence to submissions in larger subreddits.
+     - Any growth or regression in exposure of the specific link as it traverses reddit
+     - Whether users are submitting to many subreddits at once, in a firehose technique, reposting to another place after little popularity in the original location, x-posting other users' popular content, or other patterns. These have well-defined patterns and are easy to recognize.
+ - Finally, compiles the set of categorized and analyzed posts into a set of networks or graphs that are then interactively displayed to the user, so that they can highlight one group of posts, see the most popular by subreddit, and locate other interesting features of the data.
 
 ## Third Party Libraries
 
@@ -27,7 +33,3 @@ RQ or Redis Queue is used to create jobs that are processed by separate workers,
 [https://networkx.github.io](https://networkx.github.io)
 
 NetworkX is a graph library allowing for the creation of several types of graphs and can perform various graph algorithms on them, allowing for quick graph building, manipulation, and viewing.
-
-## Goals
-
-Using available reddit data, the application will create a visualization of a subset of posts on the site that were reposted in a short period of time between different subreddits—called x-posting if the user is the same or if the post is explicitly referenced to be originally from a different subreddit. This allows for analysis of where heavily reposted submissions originate, where one submission may get the majority of its upvotes from, and which posts die quickly, meaning they either command a low amount of votes or are downvoted to or below 0.
