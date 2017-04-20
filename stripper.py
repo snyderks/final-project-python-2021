@@ -16,7 +16,7 @@ def strip(filename, outfile, tags):
                     line = line.replace("}\n", "},")
                     w.write(line)
                 # seek one back to replace the last comma with a right brace
-                w.seek(w.tell()-2, 1)
+                w.seek(w.tell()-2)
                 w.write("]")
                 print("All done fixing the original.")
             else:
