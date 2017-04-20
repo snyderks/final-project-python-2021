@@ -3,6 +3,7 @@
 import ijson.backends.yajl2 as ijson
 import json
 import sys
+import re
 
 def getDupes(filename, outfile):
     """Find all the duplicates within the submissions.
@@ -15,14 +16,21 @@ def getDupes(filename, outfile):
         w = open(outfile, "w")
         w.write("[")
         dupLen = 0
+        r = re.compile("((http|https):\/\/|\/r\/)(.+?)($|\?)", re.IGNORECASE)
         for item in ijson.items(open(filename, "rb"), "item"):
-            if item["url"] in links and item["url"] not in dupes:
-                dupes.add(item["url"])
-                json.dump(item, w)
-                w.write(",\n")
-                dupLen += 1
+            # get the base path of the url
+            base = r.search(item["url"])
+            if base == None:
+                print(item["url"])
             else:
-                links.add(item["url"])
+                u = base.group(3).lower()
+                if u in links and u not in dupes:
+                    dupes.add(u)
+                    json.dump(item, w)
+                    w.write(",\n")
+                    dupLen += 1
+                else:
+                    links.add(u)
             i += 1
             if i % 10000 == 0:
                 print("Read", i, "items")
@@ -31,6 +39,7 @@ def getDupes(filename, outfile):
         w.write("]")
         print(dupLen, "reposts")
     except:
-        print(sys.exc_info()[1])
+        import traceback
+        print(traceback.format_exc())
 
 getDupes("shortened08.json", "links.json")
