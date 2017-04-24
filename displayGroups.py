@@ -5,6 +5,10 @@ import json
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.cm as cmx
+import pygraphviz
+from networkx.drawing.nx_agraph import graphviz_layout
+# import plotly.plotly as py
+# from plotly.graph_objs import *
 
 G = nx.DiGraph()
 
@@ -14,15 +18,26 @@ dupes = json.load(f)
 
 subreddits = {}
 
+attr = "created"
+
+i = 0
+
 # iterate through all duplicate groups
 for key, value in dupes.items():
+    if i > 100:
+        break
     # iterate through each submission
     for i in range(len(value)-1):
-        G.add_edge(value[i]["subreddit"], value[i+1]["subreddit"])
-        if value[i]["subreddit"] not in subreddits:
-            subreddits[value[i]["subreddit"]] = hash(value[i]["subreddit"])
-    if value[-1]["subreddit"] not in subreddits:
-        subreddits[value[-1]["subreddit"]] = hash(value[-1]["subreddit"])
+        G.add_edge(value[i][attr], value[i+1][attr])
+        if value[i][attr] not in subreddits:
+            subreddits[value[i][attr]] = hash(value[i][attr])
+    if value[-1][attr] not in subreddits:
+        subreddits[value[-1][attr]] = hash(value[-1][attr])
+    i += 1
+
+print("Built graph")
+
+print(G.number_of_nodes(), "nodes")
 
 hashed = subreddits.values()
 
@@ -37,6 +52,10 @@ for node in G.nodes():
     colorVal = scalarMap.to_rgba(strHash)
     allColors.append(colorVal)
 
-nx.draw_spring(G, node_size=25, arrows=True, width=0.25, node_color=allColors)
+print("Built colors")
+
+nx.draw(G, pos=graphviz_layout(G), node_size=25, arrows=True, width=0.25, node_color=allColors)
+
+print("Drawing graph...")
 
 plt.show()
