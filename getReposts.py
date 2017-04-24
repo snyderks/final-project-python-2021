@@ -2,7 +2,6 @@
 
 import ijson.backends.yajl2 as ijson
 import json
-import sys
 import re
 
 def getDupes(filename, outfile):
@@ -13,10 +12,9 @@ def getDupes(filename, outfile):
         links = set()
         dupes = set()
         i = 0
-        w = open(outfile, "w")
-        w.write("[")
         dupLen = 0
         r = re.compile("((http|https):\/\/|\/r\/)(.+?)($|\?)", re.IGNORECASE)
+        # first get all the duplicate links
         for item in ijson.items(open(filename, "rb"), "item"):
             # get the base path of the url
             base = r.search(item["url"])
@@ -26,18 +24,27 @@ def getDupes(filename, outfile):
                 u = base.group(3).lower()
                 if u in links and u not in dupes:
                     dupes.add(u)
-                    json.dump(item, w)
-                    w.write(",\n")
                     dupLen += 1
                 else:
                     links.add(u)
             i += 1
             if i % 10000 == 0:
                 print("Read", i, "items")
+        print(dupLen, "reposts")
 
+        w = open(outfile, "w")
+        w.write("[")
+        for item in ijson.items(open(filename, "rb"), "item"):
+            # get the base path of the url
+            base = r.search(item["url"])
+            if base is not None:
+                u = base.group(3).lower()
+                if u in dupes:
+                    json.dump(item, w)
+                    w.write(",\n")
+                    dupLen += 1
         w.seek(w.tell()-2)
         w.write("]")
-        print(dupLen, "reposts")
     except:
         import traceback
         print(traceback.format_exc())
