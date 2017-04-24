@@ -24,16 +24,17 @@ i = 0
 
 # iterate through all duplicate groups
 for key, value in dupes.items():
-    if i > 100:
+    if i > 500:
         break
-    # iterate through each submission
-    for i in range(len(value)-1):
-        G.add_edge(value[i][attr], value[i+1][attr])
-        if value[i][attr] not in subreddits:
-            subreddits[value[i][attr]] = hash(value[i][attr])
-    if value[-1][attr] not in subreddits:
-        subreddits[value[-1][attr]] = hash(value[-1][attr])
-    i += 1
+    if len(value) > 2:
+        # iterate through each submission
+        for i in range(len(value)-1):
+            G.add_edge(value[i][attr], value[i+1][attr])
+            if value[i][attr] not in subreddits:
+                subreddits[value[i][attr]] = hash(value[i][attr])
+        if value[-1][attr] not in subreddits:
+            subreddits[value[-1][attr]] = hash(value[-1][attr])
+        i += 1
 
 print("Built graph")
 
