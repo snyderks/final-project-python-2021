@@ -1,6 +1,9 @@
 # No data files.
 *.json
 
+# plotly generated files
+temp-plot.html
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
