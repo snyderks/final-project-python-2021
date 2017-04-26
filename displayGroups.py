@@ -126,7 +126,8 @@ for node in G.nodes():
     # not all posts have author data
     if "author" in nodeData:
         node_info += " User: " + nodeData["author"] + "<br>"
-    node_info += " URL: " + nodeData["url"][0:min(50, len(nodeData["url"]))]
+    node_info += " URL: " + nodeData["url"][0:min(50, len(nodeData["url"]))] + "<br>"
+    node_info += "Created on: " + datetime.datetime.fromtimestamp(nodeData["created"]).strftime('%Y-%m-%d %H:%M:%S')
     node_trace['text'].append(node_info)
 
     node_trace['marker']['color'].append(hash(node))
