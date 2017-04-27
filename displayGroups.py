@@ -2,13 +2,10 @@
 
 import networkx as nx
 import json
-# import matplotlib.pyplot as plt
-# import matplotlib.colors as colors
-# import matplotlib.cm as cmx
-# import pygraphviz
 from networkx.drawing.nx_agraph import graphviz_layout
 import plotly.offline as py
 from plotly.graph_objs import XAxis, YAxis, Layout, Scatter, Marker, Figure, Data, Line
+import datetime
 
 G = nx.DiGraph()
 
@@ -26,7 +23,9 @@ addedDupes = {}
 blacklistQueries = ["p=", "article=", "articolo=", "search_query=",
                     "all_comments=", "id=", "page=", "Id=", "slug=",
                     "?v=", "item=", "?i=", "mediafire", "google.com/url?",
-                    "view=", "search="]
+                    "view=", "search=", "comic=", "idnews=", "title=", "content.php?",
+                    "prod=", "?S=", "?s=", "ts=", "=read", "=u", "member.php?", "n=",
+                    "ID=", "story="]
 
 # the attribute of each post to use as the key.
 # names for posts are unique IDs.
@@ -47,7 +46,7 @@ for key, value in dupes.items():
     # whether the url matches any of the blacklisted portions
     containsQueries = True in [(x in value[0]["url"]) for x in blacklistQueries]
     # not explicit content, chain length is between 10 and 50, doesn't contain blacklist
-    if len(value) > 10 and len(value) < 50 and value[0]["over_18"] is False and not containsQueries:
+    if len(value) > 5 and len(value) < 50 and value[0]["over_18"] is False and not containsQueries:
         allHaveAuthor = False not in [("author" in x) for x in value]
         # iterate through each submission
         for i in range(len(value)-1):
@@ -60,7 +59,7 @@ for key, value in dupes.items():
             # and now add edges between posts with the same author
             # but only if they all have an author
             if allHaveAuthor and value[i]["author"] != deleted:
-                for x in [x[attr] for x in value if x["author"] == value[i]["author"]]:
+                for x in [x[attr] for x in value if x["author"] == value[i]["author"] and x["created"] < value[i]["created"]]:
                     G.add_edge(value[i][attr], x)
         # include the last item
         if value[-1][attr] not in subreddits:
@@ -121,8 +120,8 @@ for node in G.nodes():
     nodeData = addedDupes[node]
 
     node_info = "Subreddit: " + nodeData["subreddit"] + "<br>"
-    node_info += " Upvotes: " + str(nodeData["ups"]) + "<br>"
-    node_info += " Title: " + nodeData["title"][0:min(50, len(nodeData["title"]))] + "<br>"
+    node_info += "Upvotes: " + str(nodeData["ups"]) + "<br>"
+    node_info += "Title: " + nodeData["title"][0:min(50, len(nodeData["title"]))] + "<br>"
     # not all posts have author data
     if "author" in nodeData:
         node_info += " User: " + nodeData["author"] + "<br>"
